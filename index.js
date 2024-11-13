@@ -31,6 +31,12 @@ app.get('/login', (req, res) => {
     });
 });
 
+app.get('/landingPage', (req, res) => {
+    res.render('landingPage', {
+        title: 'Landing Page'
+    });
+});
+
 const knex = require('knex') ({
     client : 'pg',
     connection: {

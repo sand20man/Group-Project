@@ -2,11 +2,241 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Community Service App</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        /* Additional CSS for the pop-up and tabs */
+        .popup {
+            display: block; /* Show the pop-up by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .popup-overlay {
+            display: block; /* Show the overlay by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            color: #ff0000;
+            font-weight: bold;
+            float: right;
+            font-size: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s;
+        }
+
+        .tab.active {
+            background-color: #0077cc;
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%; /* Make the table take the full width of its container */
+            border-collapse: collapse; /* Optional: for better spacing of table cells */
+            margin-top: 20px; /* Optional: adds spacing above the table */
+        }
+
+        th, td {
+            padding: 10px; /* Adds padding to the table cells */
+            text-align: left; /* Aligns the text to the left */
+            border: 1px solid #ddd; /* Adds a light border for the table cells */
+        }
+
+        th {
+            background-color: #f4f4f4; /* Adds a background color for the header */
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="services.html">Available Services</a></li>
+                <li><a href="post.html">Post a Service/Request</a></li>
+                <li><a href="dashboard.html">My Dashboard</a></li>
+                <li class="logout"><a href="logout.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
     
+    <main>
+
+        <h1 class="service-title">Community Service Hub</h1>
+
+        <!-- Pop-up Explanation (Now Visible by Default) -->
+        <div class="popup-overlay" id="popupOverlay"></div>
+        <div class="popup" id="popup">
+            <span class="close-btn" onclick="closePopup()">×</span>
+            <h2>How It Works</h2>
+            <p>
+                Our platform connects people in your community, enabling you to offer or request services like yard work, tutoring, or household repairs. Create an account, post or request services, and manage your listings easily.
+            </p>
+        </div>
+
+        <!-- Tabs for Requests and Offers -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('requests')">Requests</div>
+            <div class="tab" onclick="showTab('offers')">Offers</div>
+        </div>
+
+        <!-- Tab Contents -->
+        <div class="tab-content active" id="requests">
+            <h3>Service Requests</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Yard Work Needed</td>
+                        <td>Looking for someone to mow the lawn this weekend.</td>
+                        <td>Yard Work</td>
+                    </tr>
+                    <tr>
+                        <td>Yard Work Needed</td>
+                        <td>Looking for someone to mow the lawn this weekend.</td>
+                        <td>Yard Work</td>
+                    </tr>
+                    <tr>
+                        <td>Yard Work Needed</td>
+                        <td>Looking for someone to mow the lawn this weekend.</td>
+                        <td>Yard Work</td>
+                    </tr>
+                    <tr>
+                        <td>Yard Work Needed</td>
+                        <td>Looking for someone to mow the lawn this weekend.</td>
+                        <td>Yard Work</td>
+                    </tr>
+                    <tr>
+                        <td>Yard Work Needed</td>
+                        <td>Looking for someone to mow the lawn this weekend.</td>
+                        <td>Yard Work</td>
+                    </tr>
+                    <tr>
+                        <td>Yard Work Needed</td>
+                        <td>Looking for someone to mow the lawn this weekend.</td>
+                        <td>Yard Work</td>
+                    </tr>
+                    <!-- More rows as needed -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-content" id="offers">
+            <h3>Service Offers</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Math Tutoring</td>
+                        <td>Offering math tutoring for high school students.</td>
+                        <td>Education</td>
+                    </tr>
+                    <tr>
+                        <td>Math Tutoring</td>
+                        <td>Offering math tutoring for high school students.</td>
+                        <td>Education</td>
+                    </tr>
+                    <tr>
+                        <td>Math Tutoring</td>
+                        <td>Offering math tutoring for high school students.</td>
+                        <td>Education</td>
+                    </tr>
+                    <tr>
+                        <td>Math Tutoring</td>
+                        <td>Offering math tutoring for high school students.</td>
+                        <td>Education</td>
+                    </tr>
+                    <tr>
+                        <td>Math Tutoring</td>
+                        <td>Offering math tutoring for high school students.</td>
+                        <td>Education</td>
+                    </tr>
+                    <tr>
+                        <td>Math Tutoring</td>
+                        <td>Offering math tutoring for high school students.</td>
+                        <td>Education</td>
+                    </tr>
+                    <!-- More rows as needed -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Community Service App. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // JavaScript to handle the pop-up
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("popupOverlay").style.display = "none";
+        }
+
+        // JavaScript to handle the tab switching
+        function showTab(tabId) {
+            var tabs = document.getElementsByClassName("tab");
+            var contents = document.getElementsByClassName("tab-content");
+
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+                contents[i].classList.remove("active");
+            }
+
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add("active");
+            document.getElementById(tabId).classList.add("active");
+        }
+    </script>
 </body>
 </html>
