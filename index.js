@@ -1,4 +1,5 @@
 let express = require('express');
+const bodyParser = require('body-parser');
 
 let app = express();
 
@@ -52,5 +53,3 @@ app.get('/landingPage', (req, res) => {
 
 
 app.listen(port, () => console.log('Listening'));
-
-// Riley 
