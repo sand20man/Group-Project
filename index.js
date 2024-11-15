@@ -1,7 +1,5 @@
 let express = require('express');
 
-const bodyParser = require('body-parser');
-
 let app = express();
 
 let path = require('path');
@@ -14,7 +12,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({extended: true}));
 
-app.use(express.static('public'));
+app.use('/public', express.static('public'));
 
 const knex = require('knex') ({
     client : 'pg',
