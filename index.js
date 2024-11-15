@@ -1,9 +1,3 @@
-//daniel
-//daniel 2
-// dnaiel 3
-
-
-
 let express = require('express');
 
 let app = express();
@@ -18,18 +12,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({extended: true}));
 
-app.get('/', (req, res) => {
-    res.render('index', {
-        title: 'Welcome to SkillShare',
-        featuredCourses: courses.slice(0, 3)
-    });
-});
-
-app.get('/login', (req, res) => {
-    res.render('login', {
-        title: 'Login'
-    });
-});
+app.use('/public', express.static('public'));
 
 const knex = require('knex') ({
     client : 'pg',
@@ -42,6 +25,41 @@ const knex = require('knex') ({
     }
 })
 
-app.listen(port, () => console.log('Listening'));
+const users = {
+    user1: 'password1',
+    user2: 'password2'
+};
 
-// Riley 
+app.get('/', (req, res) => {
+    res.render('login');
+});
+
+// Login route
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    if (users[username] && users[username] === password) {
+        res.redirect('/landingPage');
+    } else {
+        res.send('Invalid credentials');
+    }
+});
+
+app.get('/landingPage', (req, res) => {
+    res.render('landingPage', {
+        title: 'Landing Page'
+    });
+});
+
+app.get('/profile', (req, res) => {
+    res.render('profile', {
+        title: 'profile'
+    });
+});
+
+app.get('/post', (req, res) => {
+    res.render('post', {
+        title: 'post'
+    });
+});
+
+app.listen(port, () => console.log('Listening'));
