@@ -1,9 +1,3 @@
-//daniel
-//daniel 2
-// dnaiel 3
-
-
-
 let express = require('express');
 
 let app = express();
@@ -18,25 +12,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({extended: true}));
 
-app.get('/', (req, res) => {
-    res.render('index', {
-        title: 'Welcome to SkillShare',
-        featuredCourses: courses.slice(0, 3)
-    });
-});
-
-app.get('/login', (req, res) => {
-    res.render('login', {
-        title: 'Login'
-    });
-});
-
-app.get('/landingPage', (req, res) => {
-    res.render('landingPage', {
-        title: 'Landing Page'
-    });
-});
-
 const knex = require('knex') ({
     client : 'pg',
     connection: {
@@ -47,6 +22,32 @@ const knex = require('knex') ({
         port: 5432
     }
 })
+
+const users = {
+    user1: 'password1',
+    user2: 'password2'
+};
+
+app.get('/', (req, res) => {
+    res.render('login');
+});
+
+// Login route
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    if (users[username] && users[username] === password) {
+        res.redirect('/landingPage');
+    } else {
+        res.send('Invalid credentials');
+    }
+});
+
+app.get('/landingPage', (req, res) => {
+    res.render('landingPage', {
+        title: 'Landing Page'
+    });
+});
+
 
 app.listen(port, () => console.log('Listening'));
 
