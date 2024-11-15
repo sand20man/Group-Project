@@ -52,5 +52,10 @@ app.get('/landingPage', (req, res) => {
     });
 });
 
+app.get('/profile', (req, res) => {
+    res.render('profile', {
+        title: 'profile'
+    });
+});
 
 app.listen(port, () => console.log('Listening'));
