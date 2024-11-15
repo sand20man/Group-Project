@@ -23,7 +23,7 @@
     <main>
         <h1 class="service-title">Community Service Hub</h1>
 
-        <!-- Pop-up Explanation (Now Visible by Default) -->
+        <!-- Pop-up Explanation (Initially Hidden) -->
         <div class="popup-overlay" id="popupOverlay"></div>
         <div class="popup" id="popup">
             <span class="close-btn" onclick="closePopup()">×</span>
@@ -32,6 +32,9 @@
                 Our platform connects people in your community, enabling you to offer or request services like yard work, tutoring, or household repairs. Create an account, post or request services, and manage your listings easily.
             </p>
         </div>
+
+        <!-- Button to trigger the pop-up -->
+        <button onclick="showPopup()">Show How It Works</button>
 
         <!-- Tabs for Requests and Offers -->
         <div class="tabs">
@@ -119,9 +122,14 @@
 
     <script>
         // JavaScript to handle the pop-up
+        function showPopup() {
+            document.getElementById("popup").style.display = "block"; // Shows the pop-up
+            document.getElementById("popupOverlay").style.display = "block"; // Shows the overlay
+        }
+
         function closePopup() {
-            document.getElementById("popup").style.display = "none";
-            document.getElementById("popupOverlay").style.display = "none";
+            document.getElementById("popup").style.display = "none"; // Hides the pop-up
+            document.getElementById("popupOverlay").style.display = "none"; // Hides the overlay
         }
 
         // JavaScript to handle the tab switching
@@ -136,6 +144,12 @@
 
             document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add("active");
             document.getElementById(tabId).classList.add("active");
+        }
+
+        // JavaScript function to handle card click
+        function handleCardClick(serviceTitle) {
+            alert(`You clicked on the service: ${serviceTitle}`);
+            // You can replace the alert with code to navigate to a new page or show more details about the service
         }
     </script>
 </body>
