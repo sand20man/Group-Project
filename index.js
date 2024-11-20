@@ -19,8 +19,8 @@ const knex = require('knex') ({
     connection: {
         host: 'localhost',
         user: 'postgres',
-        password: 'is403',
-        database: 'groupproject',
+        password: "dfghjkl;'",
+        database: 'assignment3',
         port: 5432
     }
 })
@@ -31,23 +31,57 @@ const users = {
 };
 
 app.get('/', (req, res) => {
-    res.render('login');
+    const user = false;
+    // Query the 'skills' table to get all the records
+    knex('skills')
+        .select('*') // Adjust this based on the schema of your 'skills' table
+        .then(skills => {
+            res.render('landingPage', { skills, user}); // Pass skills to the EJS template and optional user info
+        })
+        .catch(error => {
+            console.error('Error fetching skills:', error);
+            res.status(500).send('Internal Server Error');
+        });
 });
 
-// Login route
+// Login route'
+app.get('/login', (req, res) => {
+    res.render('login', {
+        title: 'login'
+    });
+});
+
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     if (users[username] && users[username] === password) {
-        res.redirect('/landingPage');
+        // Query the 'skills' table to get all records after successful login
+        knex('skills')
+            .select('*')
+            .then(skills => {
+                res.render('landingPage', { skills, user: username }); // Pass 'skills' and 'user'
+            })
+            .catch(error => {
+                console.error('Error fetching skills:', error);
+                res.status(500).send('Internal Server Error');
+            });
     } else {
         res.send('Invalid credentials');
     }
 });
 
+
 app.get('/landingPage', (req, res) => {
-    res.render('landingPage', {
-        title: 'Landing Page'
-    });
+    const user = false;
+    // Query the 'skills' table to get all the records
+    knex('skills')
+        .select('*') // Adjust this based on the schema of your 'skills' table
+        .then(skills => {
+            res.render('landingPage', { skills, user}); // Pass skills to the EJS template and optional user info
+        })
+        .catch(error => {
+            console.error('Error fetching skills:', error);
+            res.status(500).send('Internal Server Error');
+        });
 });
 
 app.get('/profile', (req, res) => {
@@ -62,34 +96,35 @@ app.get('/post', (req, res) => {
     });
 });
 
-app.post('/submit-post', (req,res) => {
 
-});
-
-app.post('/addPoke', (req, res) => {
+app.post('/submit-post', (req, res) => {
     // Extract form values from req.body
-    const description = req.body.description || ''; // Default to empty string if not provided
-    const base_total = parseInt(req.body.base_total, 10); // Convert to integer
-    const date_created = req.body.date_created || new Date().toISOString().split('T')[0]; // Default to today
-    const active_poke = req.body.active_poke === 'true'; // Checkbox returns true or undefined
-    const gender = req.body.gender || 'U'; // Default to 'U' for Unknown
-    const poke_type_id = parseInt(req.body.poke_type_id, 10); // Convert to integer
+    const description = req.body.description; 
+    const title = req.body.title; 
+    // this needs to be changes
+    //const category_id = 2;
+    // this needs to be a variables
+    const user_id = 1;
+    const price = 0;
+    const created_at = new Date().toISOString().split('T')[0]; // Default to today;
+    const is_active = true;
 
-    // Insert the new Pokémon into the database
-    knex('pokemon')
+    // Insert the new service into the database
+    knex('skills')
         .insert({
             description: description.toUpperCase(), // Ensure description is uppercase
-            base_total: base_total,
-            date_created: date_created,
-            active_poke: active_poke,
-            gender: gender,
-            poke_type_id: poke_type_id,
+            title: title,
+            //category_id: category_id,
+            user_id:user_id,
+            price:price,
+            created_at: created_at,
+            is_active:is_active
         })
         .then(() => {
-            res.redirect('/'); // Redirect to the Pokémon list page after adding
+            res.redirect('/landingPage'); // Redirect to the Pokémon list page after adding
         })
         .catch(error => {
-            console.error('Error adding Pokémon:', error);
+            console.error('Error adding Service:', error);
             res.status(500).send('Internal Server Error');
         });
 });
