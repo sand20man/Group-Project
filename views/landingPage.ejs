@@ -14,7 +14,14 @@
             <ul>
                 <li><a href="post">Post a Service/Request</a></li>
                 <li><a href="profile">My Dashboard</a></li>
-                <li class="logout"><a href="logout">Logout</a></li>
+                <% if (user) { %>
+                    <p>Hello, <%= user %>! <a href="/profile">Go to your profile</a></p>
+                    <ul>
+                        <li class="logout"><a href="/logout">Logout</a></li> <!-- Logout link -->
+                    </ul>
+                <% } else { %>
+                    <p>You are not logged in. <a href="/login">Login</a></p> <!-- Login link -->
+                <% } %>
             </ul>
         </nav>
     </header>
@@ -45,39 +52,16 @@
         <div class="tab-content active" id="requests">
             <h3>Service Requests</h3>
             <div class="card-container">
+              <% skills.forEach(request => { %>
                 <div class="card">
-                    <h4 class="card-title">Yard Work Needed</h4>
-                    <p>Looking for someone to mow the lawn this weekend.</p>
-                    <p>Category: Yard Work</p>
+                  <h4 class="card-title"><%= request.title %></h4>
+                  <p><%= request.description %></p>
+                  <p>Category: <%= request.category %></p>
                 </div>
-                <div class="card">
-                    <h4 class="card-title">Yard Work Needed</h4>
-                    <p>Looking for someone to mow the lawn this weekend.</p>
-                    <p>Category: Yard Work</p>
-                </div>
-                <div class="card">
-                    <h4 class="card-title">Yard Work Needed</h4>
-                    <p>Looking for someone to mow the lawn this weekend.</p>
-                    <p>Category: Yard Work</p>
-                </div>
-                <div class="card">
-                    <h4 class="card-title">Yard Work Needed</h4>
-                    <p>Looking for someone to mow the lawn this weekend.</p>
-                    <p>Category: Yard Work</p>
-                </div>
-                <div class="card">
-                    <h4 class="card-title">Yard Work Needed</h4>
-                    <p>Looking for someone to mow the lawn this weekend.</p>
-                    <p>Category: Yard Work</p>
-                </div>
-                <div class="card">
-                    <h4 class="card-title">Yard Work Needed</h4>
-                    <p>Looking for someone to mow the lawn this weekend.</p>
-                    <p>Category: Yard Work</p>
-                </div>
+              <% }); %>
             </div>
-        </div>
-
+          </div>
+          
         <div class="tab-content" id="offers">
             <h3>Service Offers</h3>
             <div class="card-container">
