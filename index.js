@@ -44,18 +44,9 @@ const users = {
 };
 
 app.get('/', (req, res) => {
-    const user = false;
-    // Query the 'skills' table to get all the records
-    knex('skills')
-        .select('*') // Adjust this based on the schema of your 'skills' table
-        .then(skills => {
-            res.render('landingPage', { skills, user}); // Pass skills to the EJS template and optional user info
-        })
-        .catch(error => {
-            console.error('Error fetching skills:', error);
-            res.status(500).send('Internal Server Error');
-        });
+    res.redirect('/landingPage');
 });
+
 
 // Login route'
 app.get('/login', (req, res) => {
@@ -93,8 +84,14 @@ app.get('/landingPage', (req, res) => {
 
     // Query both the 'skills' table for type_id 1 and type_id 2 concurrently
     Promise.all([
-        knex('skills').select('*').where('type_id', 2),  // Skills with type_id 1
-        knex('skills').select('*').where('type_id', 1)   // Skills with type_id 2
+        knex('skills')
+            .select('*')
+            .where('skills.type_id', 2)
+            .join('type', 'type.type_id', '=', 'skills.type_id'),  // Skills with type_id 2
+        knex('skills')
+            .select('*')
+            .where('skills.type_id', 1)
+            .join('type', 'type.type_id', '=', 'skills.type_id')   // Skills with type_id 1
     ])
     .then(([requests, offers]) => {
         res.render('landingPage', { requests, offers, user }); // Pass both results to the EJS template
@@ -105,9 +102,26 @@ app.get('/landingPage', (req, res) => {
     });
 });
 
+
 app.get('/profile', (req, res) => {
-    res.render('profile', {
-        title: 'profile'
+    const user_id = req.user_id || 1; // Retrieve user_id from the request (e.g., session or query parameter)
+
+    // Query both the 'skills' table for all types for the specific user_id
+    Promise.all([
+        knex('skills')
+            .select('*')
+            .andWhere('skills.user_id', user_id) // Filter by user_id only
+            .join('type', 'type.type_id', '=', 'skills.type_id'),  // Skills joined with type
+        knex('users')
+            .select('*')
+            .where('users.user_id', user_id)
+    ])
+    .then(([skills, user]) => {
+        res.render('profile', { skills, user}); // Pass both results to the EJS template
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Internal Server Error');
     });
 });
 
@@ -140,7 +154,7 @@ app.post('/submit-post', (req, res) => {
     //const category_id = 2;
     // this needs to be a variables
     const user_id = 1;
-    const price = 0;
+    const price = req.body.price;
     const created_at = new Date().toISOString().split('T')[0]; // Default to today;
     const is_active = true;
     const post_type_id = req.body.post_type_id;

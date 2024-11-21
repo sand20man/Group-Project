@@ -27,17 +27,22 @@
           <input type="text" id="title" name="title" required>
         </div>
         <div class="form-group">
-          <label for="description">Description:</label><br>
-          <textarea id="description" name="description" rows="5" required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="post_type_id">Post Type</label>
+          <label for="post_type_id">Post Type: </label>
           <select id="post_type_id" name="post_type_id" required>
               <% types.forEach(type => { %>
                   <option value="<%= type.type_id %>"><%= type.type_name %></option>
               <% }) %>
           </select>
         </div>
+        <div class="form-group">
+          <label for="description">Description:</label><br>
+          <textarea id="description" name="description" rows="5" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="price">Price: </label>
+          <input type="number" id="price" name="price" required></input>
+        </div>
+        
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>

@@ -1,60 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Dashboard</title>
-  <link rel="stylesheet" href="/public/styles/main">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/services">Services</a></li>
-        <li><a href="/dashboard">Dashboard</a></li>
-        <li><a href="/logout">Logout</a></li>
-      </ul>
-    </nav>
-  </header>
+    <header>
+        <h1>Welcome to Your Profile</h1>
+        <nav>
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/services">Services</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li class="logout"><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <main>
-    <div class="container">
-      <div class="profile-card">
-        <img src="/images/profile.jpg" alt="Profile Picture" class="profile-pic">
-        <h2><%= user.name %></h2>
-        <p><%= user.email %></p>
-        <div class="profile-info">
-          <div class="info-item">
-            <i class="fas fa-user"></i>
-            <p>Profile Settings</p>
-          </div>
-          <div class="info-item">
-            <i class="fas fa-calendar-alt"></i>
-            <p>Joined <%= user.joinedAt %></p>
-          </div>
+    <main>
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <h2><%= user.name %></h2>
+            <p><%= user.bio %></p>
+
+            <div class="profile-info">
+                <div class="info-item">
+                    <i class="fa fa-envelope"></i>
+                    <p><%= user.email %></p>
+                </div>
+                <div class="info-item">
+                    <i class="fa fa-phone"></i>
+                    <p><%= user.phone %></p>
+                </div>
+                <div class="info-item">
+                    <i class="fa fa-map-marker"></i>
+                    <p><%= user.location %></p>
+                </div>
+            </div>
+
+            <button class="btn">Edit Profile</button>
         </div>
-        <a href="/profile/edit" class="btn btn-primary">Update Profile</a>
-      </div>
 
-      <div class="posts-card">
-        <h2>My Service Posts</h2>
-        <% posts.forEach(post => { %>
-        <div class="post-item">
-          <i class="fas fa-briefcase"></i>
-          <div class="post-details">
-            <h3><%= post.title %></h3>
-            <p><%= post.description %></p>
-            <p class="post-date">Posted <%= post.createdAt %></p>
-          </div>
+        <!-- Service Posts Section -->
+        <div class="posts-card">
+            <h2 class="service-title">Your Services</h2>
+            <table class="posts-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Date Posted</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (skills.length > 0) { %>
+                        <% skills.forEach(service => { %>
+                            <tr>
+                                <td><%= service.title %></td>
+                                <td><%= service.description %></td>
+                                <td><%= service.price %></td>
+                                <td><%= new Date(service.date).toLocaleDateString('en-US') %></td>
+                                <td>
+                                    <form action="/service/<%= service.id %>" method="GET" style="display:inline;">
+                                        <button type="submit" class="btn">View</button>
+                                    </form>
+                                    <form action="/editService/<%= service.id %>" method="GET" style="display:inline;">
+                                        <button type="submit" class="btn">Edit</button>
+                                    </form>
+                                    <form action="/deleteService/<%= service.id %>" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn" onclick="return confirm('Are you sure you want to delete this service?');">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="4">No services available</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
         </div>
-        <% }) %>
-      </div>
-    </div>
-  </main>
+    </main>
 
-  <footer>
-    <p>&copy; 2024 Community Service App. All Rights Reserved.</p>
-  </footer>
+    <footer>
+        <p>&copy; 2024 Your Website Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>
