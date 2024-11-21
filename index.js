@@ -64,6 +64,7 @@ app.get('/login', (req, res) => {
     });
 });
 
+
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     if (users[username] && users[username] === password) {
@@ -80,6 +81,10 @@ app.post('/login', (req, res) => {
     } else {
         res.send('Invalid credentials');
     }
+});
+
+app.get('/dashboard', (req, res) => {
+    res.redirect('/landingPage');
 });
 
 
