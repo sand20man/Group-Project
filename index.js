@@ -103,10 +103,24 @@ app.get('/profile', (req, res) => {
     });
 });
 
+// app.get('/post', (req, res) => {
+//     res.render('post', {
+//         title: 'post'
+//     });
+// });
+
 app.get('/post', (req, res) => {
-    res.render('post', {
-        title: 'post'
-    });
+    // Fetch Pokémon types to populate the dropdown
+    knex('type')
+        .select('type_id', 'type_name')
+        .then(types => {
+            // Render the add form with the Pokémon types data
+            res.render('post', { types });
+        })
+        .catch(error => {
+            console.error('Error fetching Pokémon types:', error);
+            res.status(500).send('Internal Server Error');
+        });
 });
 
 
