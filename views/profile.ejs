@@ -51,6 +51,7 @@
                 <thead>
                     <tr>
                         <th>Title</th>
+                        <th>Type</th>
                         <th>Description</th>
                         <th>Price</th>
                         <th>Date Posted</th>
@@ -61,8 +62,9 @@
                     <% if (skills.length > 0) { %>
                         <% skills.forEach(service => { %>
                             <tr>
-                                <td><%= service.title %></td>
-                                <td><%= service.description %></td>
+                                <td><%= service.title.toLowerCase() %></td>
+                                <td><%= service.type_name %></td>
+                                <td><%= service.description.toLowerCase() %></td>
                                 <td><%= service.price %></td>
                                 <td><%= new Date(service.date).toLocaleDateString('en-US') %></td>
                                 <td>

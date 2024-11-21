@@ -163,7 +163,7 @@ app.post('/submit-post', (req, res) => {
     knex('skills')
         .insert({
             description: description.toUpperCase(), // Ensure description is uppercase
-            title: title,
+            title: title.toUpperCase(),
             //category_id: category_id,
             user_id:user_id,
             price:price,
