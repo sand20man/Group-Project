@@ -57,7 +57,7 @@
                         <div class="card">
                             <h4 class="card-title"><%= request.title %></h4>
                             <p><%= request.description %></p>
-                            <p>Category: <%= request.category %></p>
+                            <p><%= request.price %></p>
                         </div>
                     <% }); %>
                 <% } else { %>
@@ -73,8 +73,8 @@
                     <% offers.forEach(offer => { %>
                         <div class="card">
                             <h4 class="card-title"><%= offer.title %></h4>
-                            <p><%= offer.description %></p>
-                            <p>Category: <%= offer.category %></p>
+                            <p>Description: <%= offer.description %></p>
+                            <p>Price: <%= offer.price %></p>
                         </div>
                     <% }); %>
                 <% } else { %>
