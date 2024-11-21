@@ -14,16 +14,29 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/public', express.static('public'));
 
-const knex = require('knex') ({
-    client : 'pg',
+//guys run npm install dotenv to get this to run
+require("dotenv").config(); 
+// then make a .env file that has
+//DB_HOST=localhost
+// DB_USER=postgres
+// DB_PASSWORD=dfghjkl;'
+// DB_NAME=assignment3
+// DB_PORT=5432
+
+require('dotenv').config();
+
+const knex = require('knex')({
+    client: 'pg',
     connection: {
-        host: 'localhost',
-        user: 'postgres',
-        password: "dfghjkl;'",
-        database: 'assignment3',
-        port: 5432
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        port: process.env.DB_PORT
     }
-})
+});
+
+module.exports = knex;
 
 const users = {
     user1: 'password1',
