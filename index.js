@@ -1,30 +1,18 @@
 let express = require('express');
-
 let app = express();
-
 let path = require('path');
-
+const session = require('express-session');
 const port = 3000;
 
 app.set('view engine', 'ejs');
-
 app.set('views', path.join(__dirname, 'views'));
-
-app.use(express.urlencoded({extended: true}));
-
+app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static('public'));
 
-//guys run npm install dotenv to get this to run
-require("dotenv").config(); 
-// then make a .env file that has
-//DB_HOST=localhost
-// DB_USER=postgres
-// DB_PASSWORD=dfghjkl;'
-// DB_NAME=assignment3
-// DB_PORT=5432
-
+// Load environment variables
 require('dotenv').config();
 
+// Database connection
 const knex = require('knex')({
     client: 'pg',
     connection: {
@@ -38,63 +26,65 @@ const knex = require('knex')({
 
 module.exports = knex;
 
+// Configure session middleware
+app.use(
+    session({
+        secret: 'yourSecretKey', // Replace with a secure secret
+        resave: false,
+        saveUninitialized: false,
+        cookie: { maxAge: 60000 * 60 } // 1-hour session
+    })
+);
+
+// Sample user data
 const users = {
     user1: 'password1',
     user2: 'password2'
 };
 
+// Redirect root to landingPage
 app.get('/', (req, res) => {
     res.redirect('/landingPage');
 });
 
-
-// Login route'
+// Login route
 app.get('/login', (req, res) => {
-    res.render('login', {
-        title: 'login'
-    });
+    res.render('login', { title: 'Login' });
 });
-
 
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     if (users[username] && users[username] === password) {
-        // Query the 'skills' table to get all records after successful login
-        knex('skills')
-            .select('*')
-            .then(skills => {
-                res.render('landingPage', { skills, user: username }); // Pass 'skills' and 'user'
-            })
-            .catch(error => {
-                console.error('Error fetching skills:', error);
-                res.status(500).send('Internal Server Error');
-            });
+        // Set session for logged-in user
+        req.session.user = username;
+        res.redirect('/landingPage');
     } else {
-        res.send('Invalid credentials');
+        res.status(401).send('Invalid credentials');
     }
 });
 
-app.get('/dashboard', (req, res) => {
-    res.redirect('/landingPage');
+// Logout route
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/landingPage');
+    });
 });
 
-
+// Landing page with session info
 app.get('/landingPage', (req, res) => {
-    const user = false;
-
-    // Query both the 'skills' table for type_id 1 and type_id 2 concurrently
+    const user = req.session.user || false; // Check if user is logged in
     Promise.all([
         knex('skills')
             .select('*')
             .where('skills.type_id', 2)
-            .join('type', 'type.type_id', '=', 'skills.type_id'),  // Skills with type_id 2
+            .join('type', 'type.type_id', '=', 'skills.type_id'), // Skills with type_id 2
         knex('skills')
             .select('*')
             .where('skills.type_id', 1)
-            .join('type', 'type.type_id', '=', 'skills.type_id')   // Skills with type_id 1
+            .join('type', 'type.type_id', '=', 'skills.type_id') // Skills with type_id 1
     ])
     .then(([requests, offers]) => {
-        res.render('landingPage', { requests, offers, user }); // Pass both results to the EJS template
+        res.render('landingPage', { requests, offers, user }); // Pass both results and user session to the template
     })
     .catch(error => {
         console.error('Error fetching data:', error);
@@ -102,22 +92,26 @@ app.get('/landingPage', (req, res) => {
     });
 });
 
-
+// Profile page with session info
 app.get('/profile', (req, res) => {
-    const user_id = req.user_id || 1; // Retrieve user_id from the request (e.g., session or query parameter)
+    const user = req.session.user;
+    if (!user) {
+        return res.status(401).send('Unauthorized: Please log in to access this page');
+    }
 
-    // Query both the 'skills' table for all types for the specific user_id
+    const user_id = 1; // Replace with dynamic user_id based on the session user
+
     Promise.all([
         knex('skills')
             .select('*')
-            .andWhere('skills.user_id', user_id) // Filter by user_id only
-            .join('type', 'type.type_id', '=', 'skills.type_id'),  // Skills joined with type
+            .andWhere('skills.user_id', user_id)
+            .join('type', 'type.type_id', '=', 'skills.type_id'),
         knex('users')
             .select('*')
             .where('users.user_id', user_id)
     ])
-    .then(([skills, user]) => {
-        res.render('profile', { skills, user}); // Pass both results to the EJS template
+    .then(([skills, userData]) => {
+        res.render('profile', { skills, user: userData[0] });
     })
     .catch(error => {
         console.error('Error fetching data:', error);
@@ -125,59 +119,54 @@ app.get('/profile', (req, res) => {
     });
 });
 
-// app.get('/post', (req, res) => {
-//     res.render('post', {
-//         title: 'post'
-//     });
-// });
-
+// Post creation page
 app.get('/post', (req, res) => {
-    // Fetch Pokémon types to populate the dropdown
+    const user = req.session.user;
+    if (!user) {
+        return res.status(401).send('Unauthorized: Please log in to access this page');
+    }
+
     knex('type')
         .select('type_id', 'type_name')
         .then(types => {
-            // Render the add form with the Pokémon types data
             res.render('post', { types });
         })
         .catch(error => {
-            console.error('Error fetching Pokémon types:', error);
+            console.error('Error fetching types:', error);
             res.status(500).send('Internal Server Error');
         });
 });
 
-
+// Submit post
 app.post('/submit-post', (req, res) => {
-    // Extract form values from req.body
-    const description = req.body.description; 
-    const title = req.body.title; 
-    // this needs to be changes
-    //const category_id = 2;
-    // this needs to be a variables
-    const user_id = 1;
-    const price = req.body.price;
-    const created_at = new Date().toISOString().split('T')[0]; // Default to today;
-    const is_active = true;
-    const post_type_id = req.body.post_type_id;
+    const user = req.session.user;
+    if (!user) {
+        return res.status(401).send('Unauthorized: Please log in to post');
+    }
 
-    // Insert the new service into the database
+    const { description, title, price, post_type_id } = req.body;
+    const user_id = 1; // Replace with the actual user_id from session
+    const created_at = new Date().toISOString().split('T')[0];
+    const is_active = true;
+
     knex('skills')
         .insert({
-            description: description.toUpperCase(), // Ensure description is uppercase
+            description: description.toUpperCase(),
             title: title.toUpperCase(),
-            //category_id: category_id,
-            user_id:user_id,
-            price:price,
-            created_at: created_at,
-            is_active:is_active, 
+            user_id,
+            price,
+            created_at,
+            is_active,
             type_id: post_type_id
         })
         .then(() => {
-            res.redirect('/landingPage'); // Redirect to the Pokémon list page after adding
+            res.redirect('/landingPage');
         })
         .catch(error => {
-            console.error('Error adding Service:', error);
+            console.error('Error adding service:', error);
             res.status(500).send('Internal Server Error');
         });
 });
 
+// Start server
 app.listen(port, () => console.log('Listening on port', port));
