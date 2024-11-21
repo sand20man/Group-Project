@@ -31,13 +31,11 @@
           <textarea id="description" name="description" rows="5" required></textarea>
         </div>
         <div class="form-group">
-          <label for="category">Category:</label>
-          <select id="category" name="category" required>
-            <option value="">Select a category</option>
-            <option value="yard-work">Yard Work</option>
-            <option value="education">Education</option>
-            <option value="household">Household</option>
-            <option value="other">Other</option>
+          <label for="post_type_id">Post Type</label>
+          <select id="post_type_id" name="post_type_id" required>
+              <% types.forEach(type => { %>
+                  <option value="<%= type.type_id %>"><%= type.type_name %></option>
+              <% }) %>
           </select>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
