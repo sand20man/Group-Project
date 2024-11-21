@@ -85,16 +85,19 @@ app.post('/login', (req, res) => {
 
 app.get('/landingPage', (req, res) => {
     const user = false;
-    // Query the 'skills' table to get all the records
-    knex('skills')
-        .select('*') // Adjust this based on the schema of your 'skills' table
-        .then(skills => {
-            res.render('landingPage', { skills, user}); // Pass skills to the EJS template and optional user info
-        })
-        .catch(error => {
-            console.error('Error fetching skills:', error);
-            res.status(500).send('Internal Server Error');
-        });
+
+    // Query both the 'skills' table for type_id 1 and type_id 2 concurrently
+    Promise.all([
+        knex('skills').select('*').where('type_id', 2),  // Skills with type_id 1
+        knex('skills').select('*').where('type_id', 1)   // Skills with type_id 2
+    ])
+    .then(([requests, offers]) => {
+        res.render('landingPage', { requests, offers, user }); // Pass both results to the EJS template
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Internal Server Error');
+    });
 });
 
 app.get('/profile', (req, res) => {
@@ -135,6 +138,7 @@ app.post('/submit-post', (req, res) => {
     const price = 0;
     const created_at = new Date().toISOString().split('T')[0]; // Default to today;
     const is_active = true;
+    const post_type_id = req.body.post_type_id;
 
     // Insert the new service into the database
     knex('skills')
@@ -145,7 +149,8 @@ app.post('/submit-post', (req, res) => {
             user_id:user_id,
             price:price,
             created_at: created_at,
-            is_active:is_active
+            is_active:is_active, 
+            type_id: post_type_id
         })
         .then(() => {
             res.redirect('/landingPage'); // Redirect to the Pokémon list page after adding

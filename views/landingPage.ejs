@@ -52,51 +52,38 @@
         <div class="tab-content active" id="requests">
             <h3>Service Requests</h3>
             <div class="card-container">
-              <% skills.forEach(request => { %>
-                <div class="card">
-                  <h4 class="card-title"><%= request.title %></h4>
-                  <p><%= request.description %></p>
-                  <p>Category: <%= request.category %></p>
-                </div>
-              <% }); %>
+                <% if (typeof requests !== 'undefined' && requests.length > 0) { %>
+                    <% requests.forEach(request => { %>
+                        <div class="card">
+                            <h4 class="card-title"><%= request.title %></h4>
+                            <p><%= request.description %></p>
+                            <p>Category: <%= request.category %></p>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No requests found.</p>
+                <% } %>
             </div>
-          </div>
-          
+        </div>
+        
         <div class="tab-content" id="offers">
             <h3>Service Offers</h3>
             <div class="card-container">
-                <div class="card">
-                    <h4 class="card-title">Math Tutoring</h4>
-                    <p>Offering math tutoring for high school students.</p>
-                    <p>Category: Education</p>
-                </div>
-                <div class="card">
-                    <h4 class="card-title">Math Tutoring</h4>
-                    <p>Offering math tutoring for high school students.</p>
-                    <p>Category: Education</p>
-                </div>
-                <div class="card">
-                    <h4 class="card-title">Math Tutoring</h4>
-                    <p>Offering math tutoring for high school students.</p>
-                    <p>Category: Education</p>
-                </div>
-                <div class="card">
-                    <h4 class="card-title">Math Tutoring</h4>
-                    <p>Offering math tutoring for high school students.</p>
-                    <p>Category: Education</p>
-                </div>
-                <div class="card">
-                    <h4 class="card-title">Math Tutoring</h4>
-                    <p>Offering math tutoring for high school students.</p>
-                    <p>Category: Education</p>
-                </div>
-                <div class="card">
-                    <h4 class="card-title">Math Tutoring</h4>
-                    <p>Offering math tutoring for high school students.</p>
-                    <p>Category: Education</p>
-                </div>
+                <% if (typeof offers !== 'undefined' && offers.length > 0) { %>
+                    <% offers.forEach(offer => { %>
+                        <div class="card">
+                            <h4 class="card-title"><%= offer.title %></h4>
+                            <p><%= offer.description %></p>
+                            <p>Category: <%= offer.category %></p>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p>No offers found.</p>
+                <% } %>
             </div>
         </div>
+        
+        
     </main>
 
     <footer>
