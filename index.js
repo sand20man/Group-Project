@@ -36,30 +36,38 @@ app.use(
     })
 );
 
-// Sample user data
-const users = {
-    user1: 'password1',
-    user2: 'password2'
-};
-
 // Redirect root to landingPage
 app.get('/', (req, res) => {
     res.redirect('/landingPage');
 });
 
-// Login route
+// Login route (GET)
 app.get('/login', (req, res) => {
     res.render('login', { title: 'Login' });
 });
 
-app.post('/login', (req, res) => {
+// Login route (POST)
+app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    if (users[username] && users[username] === password) {
-        // Set session for logged-in user
-        req.session.user = username;
-        res.redirect('/landingPage');
-    } else {
-        res.status(401).send('Invalid credentials');
+
+    try {
+        // Query the database for the user
+        const user = await knex('users')
+        .select('*')
+        .where({ username, password_hash: password })
+        .first(); // Get the first match (or undefined if none)
+
+        if (user) {
+            // User found, set session
+            req.session.user = user;
+            res.redirect('/landingPage');
+        } else {
+            // Invalid credentials
+            res.status(401).send('Invalid credentials');
+        }
+    } catch (err) {
+        console.error('Error querying database:', err);
+        res.status(500).send('Internal server error');
     }
 });
 
