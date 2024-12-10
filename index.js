@@ -207,27 +207,6 @@ app.get('/editService/:id', (req, res) => {
 });
 
 
-app.get('/editCharacter/:id', (req,res) => {
-    // Query the character by ID first
-    knex.select('id', 
-        'first_name',
-        'last_name', 
-        'planet_name', 
-        'jedi', 
-        'weapon')
-        .from('characters').where('id', parseInt(req.params.id, 10)).first().then(starwars => {
-            if (!starwars) {
-                return res.status(404).send('Character not found');
-              }
-              knex('planets').select('id', 'planet_name').then(planetNames => {
-                // Render the edit form and pass both pokemon and poke_types
-                res.render('editCharacter', { starwars, planetNames });
-        }).catch(err => {
-    console.log(err);
-    res.status(500).json({err});
-        });
-})
-}); 
 
 app.post('/editService/:id', (req,res) => {
     const id = req.params.id;
