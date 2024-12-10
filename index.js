@@ -107,7 +107,7 @@ app.get('/profile', (req, res) => {
         return res.status(401).send('Unauthorized: Please log in to access this page');
     }
 
-    const user_id = 1; // Replace with dynamic user_id based on the session user
+    const user_id = req.session.user.user_id; // Get the user_id from the session user
 
     Promise.all([
         knex('skills')
