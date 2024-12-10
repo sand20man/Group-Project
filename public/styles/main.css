@@ -161,3 +161,20 @@ footer {
 footer p {
     margin: 10px 0;
 }
+
+
+/* Button styles for see how it works */
+.how-it-works-btn {
+    background-color: #0077cc ; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding for the button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    font-size: 16px; /* Adjust font size */
+}
+
+/* Add hover effect */
+.how-it-works-btn:hover {
+    background-color: lightgrey; /* Darker green on hover */
+}
