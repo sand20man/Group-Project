@@ -153,7 +153,7 @@ app.post('/submit-post', (req, res) => {
     }
 
     const { description, title, price, post_type_id } = req.body;
-    const user_id = 1; // Replace with the actual user_id from session
+    const user_id = req.session.user.user_id; // Get the user_id from the session
     const created_at = new Date().toISOString().split('T')[0];
     const is_active = true;
 
@@ -174,6 +174,19 @@ app.post('/submit-post', (req, res) => {
             console.error('Error adding service:', error);
             res.status(500).send('Internal Server Error');
         });
+});
+
+// create route to delete posts from the user page 
+app.post('/deleteService/:id', (req, res) => {
+    let id = req.params.id;
+    knex('skills').where('skill_id', id).del()
+    .then(() => {
+        res.redirect('/profile');
+    })
+    .catch(error => {
+        console.error('Error deleting skill:', error);
+        res.status(500).send('Internal Server Error')
+    });
 });
 
 
@@ -219,7 +232,7 @@ app.post('/editService/:id', (req,res) => {
             price: price
         })
         .then(() => {
-            res.redirect('/');
+            res.redirect('/profile');
         })
         .catch(error => {
             console.error('Error updating Pokémon:', error);
