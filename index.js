@@ -207,7 +207,7 @@ app.get('/editService/:id', (req, res) => {
 app.post('/editService/:id', (req,res) => {
     const id = req.params.id;
 
-    const title = req.body.title;
+    const title = req.body.title.toUpperCase();
     const post_type_id = parseInt(req.body.post_type_id);
     const description = req.body.description.toUpperCase();
     const price = req.body.price;
