@@ -15,7 +15,7 @@
                 <li><a href="post">Post a Service/Request</a></li>
                 <li><a href="profile">My Dashboard</a></li>
                 <% if (user) { %>
-                    <p>Hello, <%= user %>! <a href="/profile">Go to your profile</a></p>
+                    <p>Hello, <%= user.username %>! <a href="/profile">Go to your profile</a></p>
                     <ul>
                         <li class="logout"><a href="/logout">Logout</a></li> <!-- Logout link -->
                     </ul>
@@ -67,11 +67,11 @@
                         <div class="card">
                             <h4 class="card-title"><%= request.title %></h4>
                             <p><%= request.description %></p>
-                            <p><%= request.price %></p>
+                            <p>Price: $<%=request.price %></p>
                         </div>
                     <% }); %>
                 <% } else { %>
-                    <p>No requests found.</p>n
+                    <p>No requests found.</p>
                 <% } %>
             </div>
         </div>
@@ -84,7 +84,7 @@
                         <div class="card">
                             <h4 class="card-title"><%= offer.title %></h4>
                             <p>Description: <%= offer.description %></p>
-                            <p>Price: <%= offer.price %></p>
+                            <p>Price: $<%= offer.price %></p>
                         </div>
                     <% }); %>
                 <% } else { %>
