@@ -2,7 +2,7 @@ let express = require('express');
 let app = express();
 let path = require('path');
 const session = require('express-session');
-const port = 4000;
+const port = 4001;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -177,10 +177,6 @@ app.post('/submit-post', (req, res) => {
 });
 
 
-
-
-
-
 // create route to view/edit a service from the user profile 
 app.get('/editService/:id', (req, res) => {
     let id = req.params.id; 
@@ -188,12 +184,12 @@ app.get('/editService/:id', (req, res) => {
         if (!skill) {
             return res.status(404).send('Skill not found');
         } else {
-            // Query all skills after fetching the specific skill
-            knex('skills')
-                .select('id', 'description')
-                .then(skills => {
+            // Query the skill type after fetching the specific skill
+            knex('type')
+                .select('type_id', 'type_name')
+                .then(skillType => {
                     // Render the edit form and pass both skill and skills
-                    res.render('editService', { skill, skills });
+                    res.render('editService', { skill, skillType });
                 })
                 .catch(error => {
                     console.error('Error fetching skill:', error);
@@ -213,12 +209,12 @@ app.post('/editService/:id', (req,res) => {
 
     const title = req.body.title;
     const post_type_id = parseInt(req.body.post_type_id);
-    const description = req.body.description;
+    const description = req.body.description.toUpperCase();
     const price = req.body.price;
 
-    knex('skills').where('id', id).update({
+    knex('skills').where('skill_id', id).update({
             title: title,
-            post_type_id: post_type_id,
+            type_id: post_type_id,
             description: description,
             price: price
         })
