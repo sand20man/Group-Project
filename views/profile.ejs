@@ -55,7 +55,8 @@
                         <th>Description</th>
                         <th>Price</th>
                         <th>Date Posted</th>
-                        <th>Actions</th>
+                        <th>service ID</th>
+                        <th>Actions</th> 
                     </tr>
                 </thead>
                 <tbody>
@@ -67,12 +68,10 @@
                                 <td><%= service.description.toLowerCase() %></td>
                                 <td><%= service.price %></td>
                                 <td><%= new Date(service.date).toLocaleDateString('en-US') %></td>
+                                <td><%= service.skill_id %></td>
                                 <td>
-                                    <form action="/service/<%= service.id %>" method="GET" style="display:inline;">
-                                        <button type="submit" class="btn">View</button>
-                                    </form>
-                                    <form action="/editService/<%= service.id %>" method="GET" style="display:inline;">
-                                        <button type="submit" class="btn">Edit</button>
+                                    <form action="/editService/<%= service.skill_id %>" method="GET" style="display:inline;">
+                                        <button type="submit" class="btn">View/Edit</button>
                                     </form>
                                     <form action="/deleteService/<%= service.id %>" method="POST" style="display:inline;">
                                         <button type="submit" class="btn" onclick="return confirm('Are you sure you want to delete this service?');">Delete</button>
