@@ -42,6 +42,16 @@
         <!-- Button to trigger the pop-up -->
         <button class="how-it-works-btn" onclick="showPopup()">Show How It Works</button>
 
+        <div class="search-bar">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Search requests or offers..." 
+                oninput="filterCards()" />
+            <button type="button" onclick="filterCards()">Search</button>
+        </div>
+        
+
         <!-- Tabs for Requests and Offers -->
         <div class="tabs">
             <div class="tab active" onclick="showTab('requests')">Requests</div>
@@ -121,6 +131,26 @@
             alert(`You clicked on the service: ${serviceTitle}`);
             // You can replace the alert with code to navigate to a new page or show more details about the service
         }
+
+        // javascript for search bar
+        function filterCards() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const activeTab = document.querySelector('.tab-content.active'); // Get the active tab
+            const cards = activeTab.getElementsByClassName('card'); // Get all cards in the active tab
+
+            for (let card of cards) {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+
+                // Check if the query matches the title or description
+                if (title.includes(query) || description.includes(query)) {
+                    card.style.display = ''; // Show the card
+                } else {
+                    card.style.display = 'none'; // Hide the card
+                }
+            }
+        }
+
     </script>
 </body>
 </html>
