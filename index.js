@@ -176,5 +176,81 @@ app.post('/submit-post', (req, res) => {
         });
 });
 
+
+
+
+
+
+// create route to view/edit a service from the user profile 
+app.get('/editService/:id', (req, res) => {
+    let id = req.params.id; 
+    knex('skills').where('skill_id', id).first().then(skill => {
+        if (!skill) {
+            return res.status(404).send('Skill not found');
+        } else {
+            // Query all skills after fetching the specific skill
+            knex('skills')
+                .select('id', 'description')
+                .then(skills => {
+                    // Render the edit form and pass both skill and skills
+                    res.render('editService', { skill, skills });
+                })
+                .catch(error => {
+                    console.error('Error fetching skill:', error);
+                    res.status(500).send('Internal Server Error');
+                });
+        }
+    }).catch(error => {
+        console.error('Error fetching skill by ID:', error);
+        res.status(500).send('Internal Server Error');
+    });
+});
+
+
+app.get('/editCharacter/:id', (req,res) => {
+    // Query the character by ID first
+    knex.select('id', 
+        'first_name',
+        'last_name', 
+        'planet_name', 
+        'jedi', 
+        'weapon')
+        .from('characters').where('id', parseInt(req.params.id, 10)).first().then(starwars => {
+            if (!starwars) {
+                return res.status(404).send('Character not found');
+              }
+              knex('planets').select('id', 'planet_name').then(planetNames => {
+                // Render the edit form and pass both pokemon and poke_types
+                res.render('editCharacter', { starwars, planetNames });
+        }).catch(err => {
+    console.log(err);
+    res.status(500).json({err});
+        });
+})
+}); 
+
+app.post('/editService/:id', (req,res) => {
+    const id = req.params.id;
+
+    const title = req.body.title;
+    const post_type_id = parseInt(req.body.post_type_id);
+    const description = req.body.description;
+    const price = req.body.price;
+
+    knex('skills').where('id', id).update({
+            title: title,
+            post_type_id: post_type_id,
+            description: description,
+            price: price
+        })
+        .then(() => {
+            res.redirect('/');
+        })
+        .catch(error => {
+            console.error('Error updating Pokémon:', error);
+            res.status(500).send('Internal Server Error');
+        });
+});
+
 // Start server
 app.listen(port, () => console.log('Listening on port', port));
