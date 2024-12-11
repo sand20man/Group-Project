@@ -2,7 +2,7 @@ let express = require('express');
 let app = express();
 let path = require('path');
 const session = require('express-session');
-const port = 4001;
+const port = process.env.PORT || 4001;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
