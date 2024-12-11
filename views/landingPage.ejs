@@ -11,16 +11,16 @@
 <body>
     <header>
         <nav>
-            <ul>
-                <li><a href="post">Post a Service/Request</a></li>
-                <li><a href="profile">My Dashboard</a></li>
+            <ul class="notlogin">
+                <li><a href="/post">Post a Service/Request</a></li>
+                <li><a href="/profile">My Dashboard</a></li>
+            </ul>
+            <ul class="user-status">
                 <% if (user) { %>
-                    <p>Hello, <%= user.username %>! <a href="/profile">Go to your profile</a></p>
-                    <ul>
-                        <li class="logout"><a href="/logout">Logout</a></li> <!-- Logout link -->
-                    </ul>
+                    <li>Hello, <%= user.username %>! 
+                    <li class="logout"><a href="/logout">Logout</a></li>
                 <% } else { %>
-                    <p>You are not logged in. <a href="/login">Login</a></p> <!-- Login link -->
+                    <li>You are not logged in. <a href="/login">Login</a></li>
                 <% } %>
             </ul>
         </nav>
@@ -40,7 +40,9 @@
         </div>
 
         <!-- Button to trigger the pop-up -->
-        <button class="how-it-works-btn" onclick="showPopup()">Show How It Works</button>
+         <div class="how-it-works-btn-container">
+        <button class="how-it-works-btn" onclick="showPopup()">How It Works</button>
+        </div>
 
         <div class="search-bar">
             <input 
