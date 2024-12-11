@@ -84,39 +84,37 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Create Account</h2>
-        <form action="/register" method="POST">
+        <h2>Update Account</h2>
+        <form action="/edituser/<%= user.user_id %>" method="POST">
             <div class="form-floating mb-3">
                 <label for="inputFirstName">First Name</label>
-                <input class="form-control" id="inputFirstName" name="firstname" type="text" placeholder="First Name" required />
+                <input class="form-control" value="<%= user.firstname %>" id="inputFirstName" name="firstname" type="text" placeholder="First Name" required />
             </div>
             <div class="form-floating mb-3">
                 <label for="inputLastName">Last Name</label>
-                <input class="form-control" id="inputLastName" name="lastname" type="text" placeholder="Last Name" required />
+                <input class="form-control" value="<%= user.lastname %>" id="inputLastName" name="lastname" type="text" placeholder="Last Name" required />
             </div>
             <div class="form-floating mb-3">
                 <label for="inputemail">Email</label>
-                <input class="form-control" id="inputemail" name="email" type="email" placeholder="email@email.com" required />
+                <input class="form-control" value="<%= user.email %>" id="inputemail" name="email" type="email" placeholder="email@email.com" required />
             </div>
             <div class="form-floating mb-3">
                 <label for="inputphone">Phone</label>
-                <input class="form-control" id="inputphone" name="phone" type="phone" placeholder="123-456-7890" required />
+                <input class="form-control" value="<%= user.phone %>" id="inputphone" name="phone" type="phone" placeholder="123-456-7890" required />
             </div>
             <div class="form-floating mb-3">
                 <label for="inputusername">Username</label>
-                <input class="form-control" id="inputusername" name="username" type="text" placeholder="Username" required />
-            </div>
-            <div class="form-floating mb-3">
-                <label for="inputPassword">Password</label>
-                <input class="form-control" id="inputPassword" name="password_hash" type="password" placeholder="Password" required />
-            </div>
-            <div class="form-floating mb-3">
-                <label for="inputPasswordConfirm">Confirm Password</label>
-                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm Password" required />
+                <input class="form-control" value="<%= user.username %>" id="inputusername" name="username" type="text" placeholder="Username" required />
             </div>
             <br><br>
             <div class="form-button">
-                <button type="submit" class="btn">Create Account</button>
+                <button type="submit" class="btn">Update Account</button>
+            </div>
+        </form>    
+        <br><br>
+        <form action="/deleteuser/<%= user.user_id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+            <div class="form-button">
+                <button style="background-color: #f90606;" type="submit" class="btn">Delete Account</button>
             </div>
         </form>
     </div>

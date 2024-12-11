@@ -21,7 +21,6 @@ const knex = require('knex')({
         password: process.env.RDS_PASSWORD,
         database: process.env.RDS_DB_NAME,
         port: process.env.RDS_PORT,
-        ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false
     }
 });
 
@@ -42,7 +41,7 @@ app.get('/', (req, res) => {
     res.redirect('/landingPage');
 });
 
-app.get('/edituser', (req, res) => {
+app.get('/edituser/:user_id', (req, res) => {
     const user = req.session.user;
     if (!user) {
         return res.status(401).send('Unauthorized: Please log in to access this page');
@@ -67,6 +66,67 @@ app.get('/edituser', (req, res) => {
         res.status(500).send('Internal Server Error');
     });
 });
+
+app.post('/edituser/:user_id', (req, res) => {
+    const user_id = req.params.user_id;
+    const {
+        firstname,
+        lastname,
+        email,
+        phone,
+        username,
+        password
+    } = req.body;
+    
+    console.log('Received user_id:', user_id);
+    console.log('Received body:', req.body);
+
+    knex('users')
+    .where('user_id', user_id)
+    .update({
+        'email': email,
+        'firstname': firstname,
+        'lastname': lastname,
+        'phone': phone,
+        'username': username,
+        'password': password
+    })
+    .then(updated => {
+        console.log('Rows updated:', updated);
+        res.redirect('/profile');
+    })
+    .catch(error => {
+        console.error('Update error:', error);
+        res.status(500).send('Failed to update volunteer');
+    });
+});
+
+app.post('/deleteuser/:user_id', (req, res) => {
+    const user_id = req.params.user_id; // From URL parameter
+
+    knex('skills')
+        .where('user_id', user_id) // Ensure the user_id is matched
+        .del() // Deletes the record matching the user_id
+
+    knex('users')
+        .where('user_id', user_id) // Ensure the user_id is matched
+        .del() // Deletes the record matching the user_id
+        .then(() => {
+            // Destroy the session after successful deletion
+            req.session.destroy(err => {
+                if (err) {
+                    console.error('Error destroying session:', err);
+                    return res.status(500).send('Error deleting user session');
+                }
+                // Redirect to the landing page after session destruction
+                res.redirect('/landingpage');
+            });
+        })
+        .catch(error => {
+            console.error('Error deleting user:', error);
+            res.status(500).send('Internal Server Error');
+        })
+    });
 
 // Login route (GET)
 app.get('/login', (req, res) => {
@@ -161,8 +221,12 @@ app.get('/profile', (req, res) => {
 app.get('/post', (req, res) => {
     const user = req.session.user;
     if (!user) {
-        return res.status(401).send('Unauthorized: Please log in to access this page');
-    }
+        return res.status(401).send(`
+    <div style="text-align: center; font-family: Arial, sans-serif; margin-top: 20px;">
+        <p>Unauthorized: Please log in to access this page</p>
+        <a href="/login" style="color: #007bff; text-decoration: none; font-weight: bold;">Go to Sign In</a>
+    </div>
+`);}
 
     knex('type')
         .select('type_id', 'type_name')
