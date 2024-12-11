@@ -41,6 +41,32 @@ app.get('/', (req, res) => {
     res.redirect('/landingPage');
 });
 
+app.get('/edituser', (req, res) => {
+    const user = req.session.user;
+    if (!user) {
+        return res.status(401).send('Unauthorized: Please log in to access this page');
+    }
+
+    const user_id = req.session.user.user_id; // Get the user_id from the session user
+
+    Promise.all([
+        knex('skills')
+            .select('*')
+            .andWhere('skills.user_id', user_id)
+            .join('type', 'type.type_id', '=', 'skills.type_id'),
+        knex('users')
+            .select('*')
+            .where('users.user_id', user_id)
+    ])
+    .then(([skills, userData]) => {
+        res.render('profile', { skills, user: userData[0] });
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Internal Server Error');
+    });
+});
+
 // Login route (GET)
 app.get('/login', (req, res) => {
     res.render('login', { title: 'Login' });
@@ -248,7 +274,7 @@ app.get("/register", (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-    const { firstname, lastname, username, password_hash, email } = req.body;
+    const { firstname, lastname, username, password_hash, email, phone } = req.body;
 
     if (!firstname || !lastname || !username || !password_hash || !email) {
         return res.render('register', {
@@ -261,10 +287,12 @@ app.post('/register', async (req, res) => {
     try {
         // Insert user into the database
         await knex('users').insert({
-            full_name: `${firstname} ${lastname}`,
+            firstname,
+            lastname,
             username,
             password_hash, // In production, hash the password
             email,
+            phone,
         });
          
         res.redirect('/landingPage'); // Redirect to the dashboard or appropriate page after deletion
