@@ -243,5 +243,47 @@ app.post('/editService/:id', (req,res) => {
         });
 });
 
+app.get("/register", (req, res) => {
+    res.render("register", { title: "Register" });
+});
+
+app.post('/register', async (req, res) => {
+    const { firstname, lastname, username, password_hash, email } = req.body;
+
+    if (!firstname || !lastname || !username || !password_hash || !email) {
+        return res.render('register', {
+            success: false,
+            error: 'All fields are required.',
+            formData: req.body, // Pass form data back to the page
+        });
+    }
+
+    try {
+        // Insert user into the database
+        await knex('users').insert({
+            full_name: `${firstname} ${lastname}`,
+            username,
+            password_hash, // In production, hash the password
+            email,
+        });
+         
+        res.redirect('/landingPage'); // Redirect to the dashboard or appropriate page after deletion
+        
+
+    } catch (error) {
+        console.error('Error querying database:', error.message);
+
+        // Check for duplicate email (PK constraint violation)
+        const errorMessage = 'The email provided is already in use. Please use a different email.';
+
+        // Pass the error message to the page
+        return res.render('register', {
+            success: false,
+            error: errorMessage,
+            formData: req.body, // Preserve form data
+        });
+    }
+});
+
 // Start server
 app.listen(port, () => console.log('Listening on port', port));

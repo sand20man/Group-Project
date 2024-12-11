@@ -12,13 +12,15 @@
     <header>
         <nav>
             <ul>
+                
                 <li><a href="post">Post a Service/Request</a></li>
                 <li><a href="profile">My Dashboard</a></li>
                 <% if (user) { %>
-                    <p>Hello, <%= user.username %>! <a href="/profile">Go to your profile</a></p>
+                    <a href="/profile">Profile</a>
                     <ul>
                         <li class="logout"><a href="/logout">Logout</a></li> <!-- Logout link -->
                     </ul>
+                    <p>Hello, <%= user.username %>!</p>
                 <% } else { %>
                     <p>You are not logged in. <a href="/login">Login</a></p> <!-- Login link -->
                 <% } %>
