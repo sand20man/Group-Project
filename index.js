@@ -79,26 +79,29 @@ app.get('/logout', (req, res) => {
 });
 
 // Landing page with session info
+// Landing page with session info
 app.get('/landingPage', (req, res) => {
     const user = req.session.user || false; // Check if user is logged in
+
     Promise.all([
         knex('skills')
-            .select('*')
-            .where('skills.type_id', 2)
-            .join('type', 'type.type_id', '=', 'skills.type_id'), // Skills with type_id 2
+            .select('skills.*', 'users.firstname', 'users.lastname', 'users.phone') // Select skills + user info
+            .leftJoin('users', 'skills.user_id', '=', 'users.user_id') // Join skills with users by user_id
+            .where('skills.type_id', 2), // Skills with type_id 2 (requests)
         knex('skills')
-            .select('*')
-            .where('skills.type_id', 1)
-            .join('type', 'type.type_id', '=', 'skills.type_id') // Skills with type_id 1
+            .select('skills.*', 'users.firstname', 'users.lastname', 'users.phone') // Select skills + user info
+            .leftJoin('users', 'skills.user_id', '=', 'users.user_id') // Join skills with users by user_id
+            .where('skills.type_id', 1), // Skills with type_id 1 (offers)
     ])
     .then(([requests, offers]) => {
-        res.render('landingPage', { requests, offers, user }); // Pass both results and user session to the template
+        res.render('landingPage', { requests, offers, user }); // Pass both requests, offers, and user session to the template
     })
     .catch(error => {
         console.error('Error fetching data:', error);
         res.status(500).send('Internal Server Error');
     });
 });
+
 
 // Profile page with session info
 app.get('/profile', (req, res) => {

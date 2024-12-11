@@ -58,40 +58,52 @@
             <div class="tab" onclick="showTab('offers')">Offers</div>
         </div>
 
-        <!-- Tab Contents -->
-        <div class="tab-content active" id="requests">
-            <h3>Service Requests</h3>
-            <div class="card-container">
-                <% if (typeof requests !== 'undefined' && requests.length > 0) { %>
-                    <% requests.forEach(request => { %>
-                        <div class="card">
-                            <h4 class="card-title"><%= request.title %></h4>
-                            <p><%= request.description %></p>
-                            <p>Price: $<%=request.price %></p>
-                        </div>
-                    <% }); %>
-                <% } else { %>
-                    <p>No requests found.</p>
-                <% } %>
-            </div>
-        </div>
-        
-        <div class="tab-content" id="offers">
-            <h3>Service Offers</h3>
-            <div class="card-container">
-                <% if (typeof offers !== 'undefined' && offers.length > 0) { %>
-                    <% offers.forEach(offer => { %>
-                        <div class="card">
-                            <h4 class="card-title"><%= offer.title %></h4>
-                            <p><%= offer.description %></p>
-                            <p>Price: $<%= offer.price %></p>
-                        </div>
-                    <% }); %>
-                <% } else { %>
-                    <p>No offers found.</p>
-                <% } %>
-            </div>
-        </div>
+   <!-- Tab Contents -->
+<div class="tab-content active" id="requests">
+    <h3>Service Requests</h3>
+    <div class="card-container">
+        <% if (typeof requests !== 'undefined' && requests.length > 0) { %>
+            <% requests.forEach(request => { %>
+                <div class="card">
+                    <div class="card-front">
+                        <h4 class="card-title"><%= request.title %></h4>
+                        <p><%= request.description %></p>
+                        <p>Price: $<%= request.price %></p>
+                    </div>
+                    <div class="card-back">
+                        <h4 class="card-title"><%= request.firstname %></h4>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p>No requests found.</p>
+        <% } %>
+    </div>
+</div>
+
+<div class="tab-content" id="offers">
+    <h3>Service Offers</h3>
+    <div class="card-container">
+        <% if (typeof offers !== 'undefined' && offers.length > 0) { %>
+            <% offers.forEach(offer => { %>
+                <div class="card">
+                    <div class="card-front">
+                        <h4 class="card-title"><%= offer.title %></h4>
+                        <p><%= offer.description %></p>
+                        <p>Price: $<%= offer.price %></p>
+                        <p><%=offer.firstname%></p>
+                    </div>
+                    <div class="card-back">
+                        <h4 class="card-title"> <%= offer.firstname %></h4>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p>No offers found.</p>
+        <% } %>
+    </div>
+</div>
+
         
         
     </main>
