@@ -60,7 +60,7 @@ app.get('/edituser', (req, res) => {
             .where('users.user_id', user_id)
     ])
     .then(([skills, userData]) => {
-        res.render('profile', { skills, user: userData[0] });
+        res.render('edituser', { skills, user: userData[0] });
     })
     .catch(error => {
         console.error('Error fetching data:', error);
