@@ -94,6 +94,8 @@ app.get('/landingPage', (req, res) => {
             .where('skills.type_id', 1), // Skills with type_id 1 (offers)
     ])
     .then(([requests, offers]) => {
+        console.log(requests);
+        console.log(offers);
         res.render('landingPage', { requests, offers, user }); // Pass both requests, offers, and user session to the template
     })
     .catch(error => {
