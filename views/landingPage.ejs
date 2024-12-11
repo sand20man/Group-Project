@@ -15,12 +15,12 @@
                 <li><a href="post">Post a Service/Request</a></li>
                 <li><a href="profile">My Dashboard</a></li>
                 <% if (user) { %>
-                    <p>Hello, <%= user.username %>! <a href="/profile">Profile</a></p>
+                    <p>Hello, <%= user.username %>! <a href="/profile">Go to your profile</a></p>
                     <ul>
                         <li class="logout"><a href="/logout">Logout</a></li> <!-- Logout link -->
                     </ul>
                 <% } else { %>
-                    <p> <a href="/login">Login</a></p> <!-- Login link -->
+                    <p>You are not logged in. <a href="/login">Login</a></p> <!-- Login link -->
                 <% } %>
             </ul>
         </nav>
@@ -83,7 +83,7 @@
                     <% offers.forEach(offer => { %>
                         <div class="card">
                             <h4 class="card-title"><%= offer.title %></h4>
-                            <p>Description: <%= offer.description %></p>
+                            <p><%= offer.description %></p>
                             <p>Price: $<%= offer.price %></p>
                         </div>
                     <% }); %>
