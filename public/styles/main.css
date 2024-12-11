@@ -1,4 +1,4 @@
-    /* Global Styles */
+/* Global Styles */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -457,4 +457,3 @@ body, h1, p, ul, li, input, textarea, select, button {
     font-size: 16px;
     padding: 20px 0;
 }
-
