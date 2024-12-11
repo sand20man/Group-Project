@@ -41,6 +41,32 @@ app.get('/', (req, res) => {
     res.redirect('/landingPage');
 });
 
+app.get('/edituser', (req, res) => {
+    const user = req.session.user;
+    if (!user) {
+        return res.status(401).send('Unauthorized: Please log in to access this page');
+    }
+
+    const user_id = req.session.user.user_id; // Get the user_id from the session user
+
+    Promise.all([
+        knex('skills')
+            .select('*')
+            .andWhere('skills.user_id', user_id)
+            .join('type', 'type.type_id', '=', 'skills.type_id'),
+        knex('users')
+            .select('*')
+            .where('users.user_id', user_id)
+    ])
+    .then(([skills, userData]) => {
+        res.render('profile', { skills, user: userData[0] });
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Internal Server Error');
+    });
+});
+
 // Login route (GET)
 app.get('/login', (req, res) => {
     res.render('login', { title: 'Login' });
@@ -79,26 +105,29 @@ app.get('/logout', (req, res) => {
 });
 
 // Landing page with session info
+// Landing page with session info
 app.get('/landingPage', (req, res) => {
     const user = req.session.user || false; // Check if user is logged in
+
     Promise.all([
         knex('skills')
-            .select('*')
-            .where('skills.type_id', 2)
-            .join('type', 'type.type_id', '=', 'skills.type_id'), // Skills with type_id 2
+            .select('skills.*', 'users.firstname', 'users.lastname', 'users.phone') // Select skills + user info
+            .leftJoin('users', 'skills.user_id', '=', 'users.user_id') // Join skills with users by user_id
+            .where('skills.type_id', 2), // Skills with type_id 2 (requests)
         knex('skills')
-            .select('*')
-            .where('skills.type_id', 1)
-            .join('type', 'type.type_id', '=', 'skills.type_id') // Skills with type_id 1
+            .select('skills.*', 'users.firstname', 'users.lastname', 'users.phone') // Select skills + user info
+            .leftJoin('users', 'skills.user_id', '=', 'users.user_id') // Join skills with users by user_id
+            .where('skills.type_id', 1), // Skills with type_id 1 (offers)
     ])
     .then(([requests, offers]) => {
-        res.render('landingPage', { requests, offers, user }); // Pass both results and user session to the template
+        res.render('landingPage', { requests, offers, user }); // Pass both requests, offers, and user session to the template
     })
     .catch(error => {
         console.error('Error fetching data:', error);
         res.status(500).send('Internal Server Error');
     });
 });
+
 
 // Profile page with session info
 app.get('/profile', (req, res) => {
@@ -238,6 +267,50 @@ app.post('/editService/:id', (req,res) => {
             console.error('Error updating Pokémon:', error);
             res.status(500).send('Internal Server Error');
         });
+});
+
+app.get("/register", (req, res) => {
+    res.render("register", { title: "Register" });
+});
+
+app.post('/register', async (req, res) => {
+    const { firstname, lastname, username, password_hash, email, phone } = req.body;
+
+    if (!firstname || !lastname || !username || !password_hash || !email) {
+        return res.render('register', {
+            success: false,
+            error: 'All fields are required.',
+            formData: req.body, // Pass form data back to the page
+        });
+    }
+
+    try {
+        // Insert user into the database
+        await knex('users').insert({
+            firstname,
+            lastname,
+            username,
+            password_hash, // In production, hash the password
+            email,
+            phone,
+        });
+         
+        res.redirect('/landingPage'); // Redirect to the dashboard or appropriate page after deletion
+        
+
+    } catch (error) {
+        console.error('Error querying database:', error.message);
+
+        // Check for duplicate email (PK constraint violation)
+        const errorMessage = 'The email provided is already in use. Please use a different email.';
+
+        // Pass the error message to the page
+        return res.render('register', {
+            success: false,
+            error: errorMessage,
+            formData: req.body, // Preserve form data
+        });
+    }
 });
 
 // Start server

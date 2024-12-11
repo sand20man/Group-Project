@@ -9,17 +9,15 @@
 <body>
     <header>
         <nav>
-
-            <ul class="notlogin">
-                <li><a href="/">Home</a></li>
-                <li><a href="/post">Post a Service/Request</a></li>
-            </ul>
-            <ul class="user-status">
-                <li class="logout"><a href="/logout">Logout</a></li>
+            <ul>
+                <li><a href="landingPage">Home</a></li>
+                <li><a href="post">Post a Service/Request</a></li>
+                <ul>
+                    <li class="logout"><a href="/logout">Logout</a></li> <!-- Logout link -->
+                </ul>
             </ul>
         </nav>
     </header>
-    
 
     <main>
         <!-- Profile Card -->
@@ -40,8 +38,7 @@
                     <p> <b>Phone Number: </b><%= user.phone %></p>
                 </div>
             </div>
-            <a href="/edituser" class="btn" style="text-decoration: none; color: white; background-color: #007bff; padding: 10px 20px; border-radius: 5px; font-size: 16px;">Edit Profile</a>
-
+            <button class="btn">Edit Profile</button>
         </div>
 
         <!-- Service Posts Section -->

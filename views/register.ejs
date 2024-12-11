@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Create Account</title>
+    <link rel="stylesheet" href="/public/styles/main.css">
     <style>
         * {
             margin: 0;
@@ -83,19 +84,39 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
-        <form action="/login" method="POST">
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+        <h2>Creat Account</h2>
+        <form action="/register" method="POST">
+            <div class="form-floating mb-3">
+                <label for="inputFirstName">First Name</label>
+                <input class="form-control" id="inputFirstName" name="firstname" type="text" placeholder="First Name" required />
             </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+            <div class="form-floating mb-3">
+                <label for="inputLastName">Last Name</label>
+                <input class="form-control" id="inputLastName" name="lastname" type="text" placeholder="Last Name" required />
             </div>
-            <button type="submit" class="btn">Login</button>
-            <div class="extra-options">
-                <p>Don't have an account? <a href="/register">Sign up</a></p>
+            <div class="form-floating mb-3">
+                <label for="inputemail">Email</label>
+                <input class="form-control" id="inputemail" name="email" type="email" placeholder="email@email.com" required />
+            </div>
+            <div class="form-floating mb-3">
+                <label for="inputphone">Phone</label>
+                <input class="form-control" id="inputphone" name="phone" type="phone" placeholder="123-456-7890" required />
+            </div>
+            <div class="form-floating mb-3">
+                <label for="inputusername">Username</label>
+                <input class="form-control" id="inputusername" name="username" type="text" placeholder="Username" required />
+            </div>
+            <div class="form-floating mb-3">
+                <label for="inputPassword">Password</label>
+                <input class="form-control" id="inputPassword" name="password_hash" type="password" placeholder="Password" required />
+            </div>
+            <div class="form-floating mb-3">
+                <label for="inputPasswordConfirm">Confirm Password</label>
+                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm Password" required />
+            </div>
+            <br><br>
+            <div class="form-button">
+                <button type="submit" class="btn">Create Account</button>
             </div>
         </form>
     </div>

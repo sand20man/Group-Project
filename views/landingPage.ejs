@@ -67,9 +67,15 @@
                 <% if (typeof requests !== 'undefined' && requests.length > 0) { %>
                     <% requests.forEach(request => { %>
                         <div class="card">
-                            <h4 class="card-title"><%= request.title %></h4>
-                            <p><%= request.description %></p>
-                            <p>Price: $<%=request.price %></p>
+                            <div class="card-front">
+                                <h4 class="card-title"><%= request.title %></h4>
+                                <p><%= request.description %></p>
+                                <p>Price: $<%= request.price %></p>
+                            </div>
+                            <div class="card-back">
+                                <h4 class="card-title"><%= request.firstname + ' ' + request.lastname %></h4>
+                                <p><%=request.phone%></p>
+                            </div>
                         </div>
                     <% }); %>
                 <% } else { %>
@@ -77,16 +83,23 @@
                 <% } %>
             </div>
         </div>
-        
+
         <div class="tab-content" id="offers">
             <h3>Service Offers</h3>
             <div class="card-container">
                 <% if (typeof offers !== 'undefined' && offers.length > 0) { %>
                     <% offers.forEach(offer => { %>
                         <div class="card">
-                            <h4 class="card-title"><%= offer.title %></h4>
-                            <p><%= offer.description %></p>
-                            <p>Price: $<%= offer.price %></p>
+                            <div class="card-front">
+                                <h4 class="card-title"><%= offer.title %></h4>
+                                <p><%= offer.description %></p>
+                                <p>Price: $<%= offer.price %></p>
+                                <p><%=offer.firstname%></p>
+                            </div>
+                            <div class="card-back">
+                                <h4 class="card-title"> <%= offer.firstname + ' ' + offer.lastname %></h4>
+                                <p><%=offer.phone%></p>
+                            </div>
                         </div>
                     <% }); %>
                 <% } else { %>
@@ -94,8 +107,6 @@
                 <% } %>
             </div>
         </div>
-        
-        
     </main>
 
     <footer>

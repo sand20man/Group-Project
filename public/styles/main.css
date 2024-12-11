@@ -267,9 +267,12 @@ main {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
     margin-top: 20px;
+    perspective: 1000px; /* Enables 3D effect */
 }
 
 .card {
+    position: relative;
+    transform-style: preserve-3d; /* Enables 3D flipping */
     background-color: #fff;
     border: 1px solid #dddfe2;
     border-radius: 8px;
