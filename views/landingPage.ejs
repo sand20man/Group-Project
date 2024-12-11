@@ -71,7 +71,8 @@
                         <p>Price: $<%= request.price %></p>
                     </div>
                     <div class="card-back">
-                        <h4 class="card-title"><%= request.firstname %></h4>
+                        <h4 class="card-title"><%= request.firstname + ' ' + request.lastname %></h4>
+                        <p><%=request.phone%></p>
                     </div>
                 </div>
             <% }); %>
@@ -94,7 +95,8 @@
                         <p><%=offer.firstname%></p>
                     </div>
                     <div class="card-back">
-                        <h4 class="card-title"> <%= offer.firstname %></h4>
+                        <h4 class="card-title"> <%= offer.firstname + ' ' + offer.lastname %></h4>
+                        <p><%=offer.phone%></p>
                     </div>
                 </div>
             <% }); %>
