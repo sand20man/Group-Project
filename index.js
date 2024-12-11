@@ -104,13 +104,16 @@ app.post('/edituser/:user_id', (req, res) => {
 app.post('/deleteuser/:user_id', (req, res) => {
     const user_id = req.params.user_id; // From URL parameter
 
+    // Delete related skills first
     knex('skills')
         .where('user_id', user_id) // Ensure the user_id is matched
-        .del() // Deletes the record matching the user_id
-
-    knex('users')
-        .where('user_id', user_id) // Ensure the user_id is matched
-        .del() // Deletes the record matching the user_id
+        .del()
+        .then(() => {
+            // Now delete the user from the users table
+            return knex('users')
+                .where('user_id', user_id)
+                .del();
+        })
         .then(() => {
             // Destroy the session after successful deletion
             req.session.destroy(err => {
@@ -125,8 +128,8 @@ app.post('/deleteuser/:user_id', (req, res) => {
         .catch(error => {
             console.error('Error deleting user:', error);
             res.status(500).send('Internal Server Error');
-        })
-    });
+        });
+});
 
 // Login route (GET)
 app.get('/login', (req, res) => {
