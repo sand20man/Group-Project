@@ -182,8 +182,23 @@ main {
     background-color: #f8f8f8; /* Adjust color as needed */
     transform: rotateY(180deg);
     display: flex;
-    align-items: center;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center content horizontally */
+    justify-content: center; /* Vertically center content (optional) */
+    padding: 20px; /* Add padding for spacing */
+    box-sizing: border-box;
+    text-align: center; /* Center text */
 }
+
+/* Optional: Add spacing between the individual elements */
+.card-back .card-title {
+    margin-bottom: 10px; /* Space between the title and other content */
+}
+
+.card-back p {
+    margin: 5px 0; /* Space between each paragraph */
+}
+
 
 
 /* Footer Styles */
